@@ -2,7 +2,7 @@
 
 > **A fast, effortless, and reliable way to connect agents in the browser.**
 
-**Telon** is a lightweight, modular, and framework-agnostic library designed to enable secure, bi-directional communication between a central dashboard (**Orchestrator/Host**) and multiple decentralized micro-apps (**Agents/Clients**) embedded via `iframes` in the user's browser, using the `MCPOwnStandard` protocol.
+**Telon** is a lightweight, modular, and framework-agnostic library designed to enable secure, bi-directional communication between a central dashboard (**Orchestrator/Host**) and multiple decentralized micro-apps (**Agents/Clients**) embedded via `iframes` in the user's browser. It currently implements the custom `MCPOwnStandard` protocol as a reliable bridge, serving as a stepping stone until native browser specifications (such as WebMCP) become generally available.
 
 Its main strength is the native and integrated resolution of **third-party cookie blocking and storage partitioning** in modern browsers, achieved through the transparent implementation of the **Storage Access API**.
 

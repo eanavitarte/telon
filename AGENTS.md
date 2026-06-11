@@ -1,6 +1,6 @@
-# Hola Agente 🤖✨
+# Hello Agent 🤖✨
 
-Este es **Telon**, una solución elegante para la web agéntica que conecta aplicaciones en iframes de manera site-agnostic y segura.
-Resolvemos el bloqueo de cookies de terceros y el particionamiento de almacenamiento mediante un handshake robusto y la Storage Access API.
-Tu misión al editar este código es mantener la pureza de TypeScript, la ausencia de dependencias y la máxima ligereza posible.
-¡Trabajemos juntos para simplificar la integración de micro-frontends inteligentes y descentralizados en el navegador!
+This is **Telon**, an elegant solution for the agentic web that connects iframe applications securely and in a site-agnostic manner.
+We resolve third-party cookie blocking and storage partitioning using a robust handshake and the Storage Access API.
+Your mission when editing this codebase is to maintain TypeScript purity, zero third-party dependencies, and maximum lightweight efficiency.
+Let's work together to simplify the integration of intelligent and decentralized micro-frontends in the browser!

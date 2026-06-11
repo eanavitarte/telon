@@ -2,25 +2,25 @@
 
 > **A fast, effortless, and reliable way to connect agents in the browser.**
 
-**Telon** es una biblioteca ligera, modular y agnóstica al framework diseñada para posibilitar la comunicación bidireccional y segura entre un panel central (**Orquestador/Host**) y múltiples aplicaciones descentralizadas (**Agentes/Clientes**) a través de `iframes` en el navegador del usuario utilizando el protocolo `MCPOwnStandard`.
+**Telon** is a lightweight, modular, and framework-agnostic library designed to enable secure, bi-directional communication between a central dashboard (**Orchestrator/Host**) and multiple decentralized micro-apps (**Agents/Clients**) embedded via `iframes` in the user's browser, using the `MCPOwnStandard` protocol.
 
-Su principal fortaleza es la resolución nativa e integrada del **bloqueo de cookies de terceros y particionamiento de almacenamiento (Storage Partitioning)** en navegadores modernos mediante la implementación transparente de la **Storage Access API**.
-
----
-
-## Características Principales 🚀
-
-*   **100% Client-Side & Site-Agnostic**: Comunicación directa en el navegador mediante `postMessage`. Funciona con cualquier combinación de dominios o entornos locales de desarrollo.
-*   **Gestión de Storage Access API**: Detecta de forma proactiva si el navegador bloquea la sesión del cliente dentro del iframe y ofrece un flujo de interacción de usuario para solicitar y conceder accesos nativamente.
-*   **Handshake Seguro**: Validación automática de orígenes (`event.origin`) mediante expresiones regulares y firmas dinámicas (`apiKey`) para evitar ataques de secuestro de iframe (Clickjacking) y XSS/CSRF.
-*   **Aislamiento de Diagnósticos**: Facilita el rastreo individualizado de logs de conexión por cada micro-aplicación cliente.
-*   **Totalmente Tipado**: Escrito en TypeScript para garantizar autocompletado robusto y seguridad en tiempo de compilación.
+Its main strength is the native and integrated resolution of **third-party cookie blocking and storage partitioning** in modern browsers, achieved through the transparent implementation of the **Storage Access API**.
 
 ---
 
-## Instalación 📦
+## Key Features 🚀
 
-Instala la biblioteca desde tu registro local o como dependencia:
+*   **100% Client-Side & Site-Agnostic**: Direct communication in the browser via `postMessage`. Works with any combination of domains or local development environments.
+*   **Storage Access API Management**: Proactively detects if the browser blocks the client's session inside the iframe and provides a user gesture flow to request and grant native storage access.
+*   **Secure Handshake**: Automatic origin validation (`event.origin`) using regular expressions and dynamic signatures (`apiKey`) to prevent Clickjacking, XSS, and CSRF attacks.
+*   **Isolated Diagnostics**: Enables individual tracking of connection logs and event traces for each client micro-app.
+*   **Fully Typed**: Written in TypeScript to guarantee robust autocomplete and compile-time type safety.
+
+---
+
+## Installation 📦
+
+Install the library as a dependency:
 
 ```bash
 npm install telon
@@ -28,76 +28,80 @@ npm install telon
 
 ---
 
-## Uso Rápido 💻
+## Quick Start 💻
 
-### 1. El Orquestador (`telon/host`)
+### 1. The Orchestrator (`telon/host`)
 
-Instancia `TelonHost` en tu panel principal para registrar clientes e interactuar con ellos:
+Instantiate `TelonHost` in your main dashboard to register clients and interact with them:
 
 ```typescript
-import { TelonHost } from 'telon';
+import { TelonHost } from 'telon/host';
 
 const host = new TelonHost({
   onClientRegister: (client) => {
-    console.log(`¡Cliente ${client.name} sincronizado con éxito!`);
+    console.log(`Client ${client.name} successfully synced!`);
   },
   onClientDataUpdate: (client, capability, data) => {
-    console.log(`Datos recibidos del cliente ${client.name} [${capability}]:`, data);
+    console.log(`Data received from client ${client.name} [${capability}]:`, data);
   },
   onClientUnauthorized: (client, reason) => {
-    console.warn(`Cliente ${client.name} requiere autorización:`, reason);
-    // Cambia el estilo del iframe a visible para que el usuario pueda presionar el botón
+    console.warn(`Client ${client.name} requires authorization:`, reason);
+    // Style the iframe as visible so the user can click the authorization button inside it
   }
 });
 
-// Registrar un cliente usando su URL e iframe correspondiente
-const clientRef = host.register({
+// Register a client
+host.register({
   id: 'mantras',
   url: 'https://mantras.lexmente.app/mcp-frame',
-  apiKey: 'mi_clave_secreta'
+  apiKey: 'my_secret_api_key'
 });
 
-// Enviar una acción al agente
-clientRef.sendAction('tasks', 'TOGGLE_STATE', { id: 'uuid-123', completed: true });
+// Connect your iframe window to start the connection handshake
+const iframe = document.getElementById('my-client-iframe') as HTMLIFrameElement;
+host.connectIframe('mantras', iframe.contentWindow);
+
+// Send an action to the client agent
+host.sendAction('mantras', 'tasks', 'TOGGLE_STATE', { id: 'uuid-123', completed: true });
 ```
 
-### 2. El Agente Cliente (`telon/client`)
+### 2. The Client Agent (`telon/client`)
 
-Instancia `TelonClient` en la sub-ruta dedicada a tu iframe (ej. `/mcp-frame`):
+Instantiate `TelonClient` on the page dedicated to your iframe (e.g., `/mcp-frame`):
 
 ```typescript
-import { TelonClient } from 'telon';
+import { TelonClient } from 'telon/client';
 
 const client = new TelonClient({
   name: 'Mantras (ZenFlow)',
-  description: 'Aplicación de bienestar y meditación diaria.',
+  description: 'Daily meditation and wellness micro-app.',
   capabilities: ['habits', 'tasks', 'telephone'],
   allowedHostOrigins: [/^http:\/\/localhost(:\d+)?$/, 'https://manager.lexmente.app'],
   
-  // Verifica si tu app tiene sesión activa
+  // Verify if your application has an active session
   checkSession: async () => {
     return !!localStorage.getItem('user_id');
   },
   
-  // Retorna la clave para validar la firma de la conexión
+  // Return the API key to validate the connection signature
   resolveApiKey: async () => {
     return localStorage.getItem('api_key') || 'fallback_key';
   }
 });
 
-// Escuchar acciones desde el orquestador
+// Handle actions coming from the orchestrator
 client.onAction('tasks', 'TOGGLE_STATE', async (payload) => {
   await db.updateTask(payload.id, { completed: payload.completed });
-  // Responder con los datos actualizados
+  // Send back updated data
   client.sendDataUpdate('tasks', await db.getTasks());
 });
 
-// Iniciar escuchas del protocolo
+// Start listening for protocol events
 client.start();
 ```
 
 ---
 
-## Licencia 📄
+## License 📄
 
-Este proyecto está bajo la Licencia **MIT**. Consulta el archivo `LICENSE.md` para más detalles.
+This project is licensed under the **MIT** License. See the `LICENSE.md` file for details.

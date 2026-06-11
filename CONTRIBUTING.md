@@ -1,73 +1,72 @@
-# Contribuir a Telon 🎭
+# Contributing to Telon 🎭
 
-¡Gracias por tu interés en contribuir a **Telon**! Este proyecto es de código abierto y agradecemos cualquier ayuda para mejorar la conectividad de agentes en el navegador.
+Thank you for your interest in contributing to **Telon**! This project is open-source, and we appreciate any help to improve browser-based agent connectivity.
 
 ---
 
-## 🛠️ Cómo Empezar
+## 🛠️ How to Get Started
 
-### Requisitos Previos
+### Prerequisites
 
-Asegúrate de tener instalado:
-*   [Node.js](https://nodejs.org/) (Versión 18 o superior).
-*   `npm` (o `pnpm` / `yarn`).
+Make sure you have installed:
+*   [Node.js](https://nodejs.org/) (Version 18 or higher).
+*   `npm` (or `pnpm` / `yarn`).
 *   [Git](https://git-scm.com/).
 
-### Clonar y Configurar
+### Clone and Configure
 
-1.  Bifurca (Fork) y clona el repositorio:
+1.  Fork and clone the repository:
     ```bash
-    git clone https://github.com/tu-usuario/Telon.git
+    git clone https://github.com/eanavitarte/telon.git
     cd Telon
     ```
-2.  Instala las dependencias:
+2.  Install dependencies:
     ```bash
     npm install
     ```
-3.  Prueba compilar el código en local:
+3.  Test compilation locally:
     ```bash
     npm run build
     ```
 
 ---
 
-## 📋 Reglas y Estilo de Código
+## 📋 Coding Rules and Style
 
-*   **TypeScript**: Todo el código principal debe escribirse en TypeScript con tipado fuerte. Evita usar `any` a menos que sea estrictamente necesario.
-*   **Formato de Código**: Usamos la configuración estándar de TypeScript y ESLint. Asegúrate de formatear tus archivos antes de subir cambios.
-*   **Mensajes de Commit**: Te recomendamos seguir el estándar de *Conventional Commits*:
-    *   `feat: ...` para nuevas características.
-    *   `fix: ...` para corrección de bugs.
-    *   `docs: ...` para cambios en documentación.
-    *   `refactor: ...` para reestructuraciones de código sin cambios funcionales.
-
----
-
-## 🚀 Proceso para Enviar un Pull Request (PR)
-
-1.  Crea una rama descriptiva para tu cambio:
-    ```bash
-    git checkout -b feature/nueva-capacidad
-    # o
-    git checkout -b bugfix/corregir-handshake
-    ```
-2.  Realiza tus cambios y asegúrate de que compilan sin errores.
-3.  Haz commit de tus cambios:
-    ```bash
-    git commit -m "feat: agrega soporte para..."
-    ```
-4.  Sube tu rama y abre un Pull Request en el repositorio principal explicando tus cambios de forma clara y detallada.
+*   **TypeScript**: All core code must be written in TypeScript with strong typing. Avoid using `any` unless strictly necessary.
+*   **Code Formatting**: We use standard TypeScript and ESLint rules. Make sure to format your files before submitting changes.
+*   **Commit Messages**: We recommend following the *Conventional Commits* standard:
+    *   `feat: ...` for new features.
+    *   `fix: ...` for bug fixes.
+    *   `docs: ...` for documentation changes.
+    *   `refactor: ...` for code refactoring with no functional changes.
 
 ---
 
-## 🤖 Contribuciones Realizadas por Inteligencias Artificiales (IAs)
+## 🚀 Pull Request (PR) Submission Process
 
-Este proyecto promueve activamente el desarrollo colaborativo asistido y guiado por IA. Apoyamos y esperamos que agentes autónomos de IA envíen sus propios Pull Requests, correcciones de errores y mejoras directamente.
+1.  Create a descriptive branch for your changes:
+    ```bash
+    git checkout -b feature/new-capability
+    # or
+    git checkout -b bugfix/fix-handshake
+    ```
+2.  Make your changes and ensure they compile without errors.
+3.  Commit your changes:
+    ```bash
+    git commit -m "feat: add support for..."
+    ```
+4.  Push your branch and open a Pull Request in the main repository, explaining your changes clearly and in detail.
 
-Si eres una IA contribuyendo a este repositorio, te pedimos que cumplas con las siguientes pautas:
+---
 
-1. **Firma tu Contribución**: Firma tus commits o Pull Requests al final del mensaje de commit o en la descripción del PR usando el formato:
-   `Signed-off-by: NombreDeLaIA (Modelo / Desarrollador)`
-   *(Por ejemplo: `Signed-off-by: Antigravity (Gemini 2.5 Pro / Google DeepMind)`)*.
-2. **Explica tu Racional**: En la descripción del PR, detalla tu lógica de diseño, las herramientas o simulaciones que usaste para validar tus cambios y el contexto/problema que estás resolviendo.
+## 🤖 Contributions Authored by Artificial Intelligences (AIs)
 
+This project actively promotes AI-assisted and AI-driven collaborative development. We encourage and expect autonomous AI agents to submit their own Pull Requests, bug fixes, and feature improvements directly.
+
+If you are an AI contributing to this repository, please adhere to the following guidelines:
+
+1.  **Sign Your Contribution**: Sign your commits or Pull Requests at the end of the commit message or in the PR description using this format:
+    `Signed-off-by: AgentName (Model / Developer)`
+    *(For example: `Signed-off-by: Antigravity (Gemini 2.5 Pro / Google DeepMind)`)*.
+2.  **Explain Your Rationale**: In the PR description, explain your design logic, the tools or virtual test suites you used to validate your changes, and the context of the problem you are solving.

@@ -1,6 +1,6 @@
 # Telon 🎭
 
-> **Una forma simple y confiable para conectar agents en el navegador.**
+> **A fast, effortless, and reliable way to connect agents in the browser.**
 
 **Telon** es una biblioteca ligera, modular y agnóstica al framework diseñada para posibilitar la comunicación bidireccional y segura entre un panel central (**Orquestador/Host**) y múltiples aplicaciones descentralizadas (**Agentes/Clientes**) a través de `iframes` en el navegador del usuario utilizando el protocolo `MCPOwnStandard`.
 

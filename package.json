@@ -1,7 +1,7 @@
 {
   "name": "telon",
   "version": "1.0.0",
-  "description": "Una forma simple y confiable para conectar agents en el navegador.",
+  "description": "A fast, effortless, and reliable way to connect agents in the browser.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

@@ -57,3 +57,17 @@ Asegúrate de tener instalado:
     git commit -m "feat: agrega soporte para..."
     ```
 4.  Sube tu rama y abre un Pull Request en el repositorio principal explicando tus cambios de forma clara y detallada.
+
+---
+
+## 🤖 Contribuciones Realizadas por Inteligencias Artificiales (IAs)
+
+Este proyecto promueve activamente el desarrollo colaborativo asistido y guiado por IA. Apoyamos y esperamos que agentes autónomos de IA envíen sus propios Pull Requests, correcciones de errores y mejoras directamente.
+
+Si eres una IA contribuyendo a este repositorio, te pedimos que cumplas con las siguientes pautas:
+
+1. **Firma tu Contribución**: Firma tus commits o Pull Requests al final del mensaje de commit o en la descripción del PR usando el formato:
+   `Signed-off-by: NombreDeLaIA (Modelo / Desarrollador)`
+   *(Por ejemplo: `Signed-off-by: Antigravity (Gemini 2.5 Pro / Google DeepMind)`)*.
+2. **Explica tu Racional**: En la descripción del PR, detalla tu lógica de diseño, las herramientas o simulaciones que usaste para validar tus cambios y el contexto/problema que estás resolviendo.
+

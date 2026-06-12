@@ -1,5 +1,6 @@
 @AGENTS.md
 @C:\Users\LENOVO LOQ\Documents\ARCHIVO\Asistente Virtual\Instrucciones\index.md
+@C:\Users\LENOVO LOQ\Desarrollo\Telon\ARCHITECTURE.md
 
 ## Modo de Operación Obligatorio: Planeación Primero (Lock-Step Planning)
 

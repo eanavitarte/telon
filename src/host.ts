@@ -48,7 +48,7 @@ export class TelonHost {
     if (!iframeWindow) return;
     const client = this.clients.get(clientId);
     if (!client) {
-      console.warn(`[TelonHost] Client definition not found for: ${clientId}`);
+      console.warn(`%c[TelonHost]%c Client definition not found for: ${clientId}`, 'color: #0d9488; font-weight: bold;', '');
       return;
     }
 
@@ -73,7 +73,7 @@ export class TelonHost {
         const targetOrigin = new URL(client.url).origin;
         iframeWindow.postMessage(payload, targetOrigin);
       } catch (e) {
-        console.error(`[TelonHost] Failed to send handshake to ${clientId}:`, e);
+        console.error(`%c[TelonHost]%c Failed to send handshake to ${clientId}:`, 'color: #ef4444; font-weight: bold;', '', e);
       }
     };
 
@@ -88,7 +88,7 @@ export class TelonHost {
   public openAuthBridge(clientId: string): void {
     const client = this.clients.get(clientId);
     if (!client) {
-      console.warn(`[TelonHost] Client definition not found for: ${clientId}`);
+      console.warn(`%c[TelonHost]%c Client definition not found for: ${clientId}`, 'color: #0d9488; font-weight: bold;', '');
       return;
     }
 
@@ -113,12 +113,12 @@ export class TelonHost {
       targetUrl = `${baseUrl}${separator}hostOrigin=${encodeURIComponent(hostOrigin)}&nonce=${encodeURIComponent(nonce)}&clientId=${encodeURIComponent(clientId)}`;
     }
 
-    console.log(`[TelonHost] Opening auth bridge popup for client ${clientId} at: ${targetUrl}`);
+    console.log(`%c[TelonHost]%c Opening auth bridge popup for client ${clientId} at: ${targetUrl}`, 'color: #0d9488; font-weight: bold;', '');
     const popup = window.open(targetUrl, `TelonAuth_${clientId}`, 'width=600,height=700,status=yes,resizable=yes');
     if (popup) {
       this.activePopups.set(clientId, popup);
     } else {
-      console.error('[TelonHost] Popup blocked. Please allow popups for this site.');
+      console.error('%c[TelonHost]%c Popup blocked. Please allow popups for this site.', 'color: #ef4444; font-weight: bold;', '');
     }
   }
 
@@ -127,7 +127,7 @@ export class TelonHost {
     const iframeWindow = this.activeIframes.get(clientId);
     
     if (!client || !iframeWindow) {
-      console.warn(`[TelonHost] Cannot send action to ${clientId}: client or iframe not ready.`);
+      console.warn(`%c[TelonHost]%c Cannot send action to ${clientId}: client or iframe not ready.`, 'color: #0d9488; font-weight: bold;', '');
       return;
     }
 
@@ -144,7 +144,7 @@ export class TelonHost {
       const targetOrigin = new URL(client.url).origin;
       iframeWindow.postMessage(message, targetOrigin);
     } catch (e) {
-      console.error(`[TelonHost] Failed to send action to ${clientId}:`, e);
+      console.error(`%c[TelonHost]%c Failed to send action to ${clientId}:`, 'color: #ef4444; font-weight: bold;', '', e);
     }
   }
 
@@ -199,13 +199,13 @@ export class TelonHost {
       const authData = data as AuthBridgeSuccessMessage;
       
       if (authData.clientId !== matchingClientId) {
-        console.warn(`[TelonHost] Client ID mismatch. Expected: ${matchingClientId}, Got: ${authData.clientId}`);
+        console.warn(`%c[TelonHost]%c Client ID mismatch. Expected: ${matchingClientId}, Got: ${authData.clientId}`, 'color: #0d9488; font-weight: bold;', '');
         return;
       }
 
       const expectedNonce = this.activeNonces.get(matchingClientId);
       if (!expectedNonce || authData.nonce !== expectedNonce) {
-        console.warn(`[TelonHost] Nonce validation failed or expired for: ${matchingClientId}`);
+        console.warn(`%c[TelonHost]%c Nonce validation failed or expired for: ${matchingClientId}`, 'color: #0d9488; font-weight: bold;', '');
         return;
       }
 
@@ -221,9 +221,9 @@ export class TelonHost {
         };
         try {
           iframeWindow.postMessage(syncMessage, event.origin);
-          console.log(`[TelonHost] Forwarded auth token to iframe: ${matchingClientId}`);
+          console.log(`%c[TelonHost]%c Forwarded auth token to iframe: ${matchingClientId}`, 'color: #0d9488; font-weight: bold;', '');
         } catch (e) {
-          console.error(`[TelonHost] Failed to forward auth token to iframe ${matchingClientId}:`, e);
+          console.error(`%c[TelonHost]%c Failed to forward auth token to iframe ${matchingClientId}:`, 'color: #ef4444; font-weight: bold;', '', e);
         }
       }
 

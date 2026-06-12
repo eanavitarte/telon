@@ -33,7 +33,7 @@ export class TelonClient {
 
   public sendDataUpdate(capability: string, data: any): void {
     if (!this.isAuthorized || !this.authorizedHostOrigin) {
-      console.warn(`[TelonClient] Cannot send data update: not authorized by Host yet.`);
+      console.warn(`%c[TelonClient]%c Cannot send data update: not authorized by Host yet.`, 'color: #10b981; font-weight: bold;', '');
       return;
     }
 
@@ -68,7 +68,7 @@ export class TelonClient {
       }
       return true;
     } catch (e) {
-      console.error('[TelonClient] Failed to request storage access:', e);
+      console.error('%c[TelonClient]%c Failed to request storage access:', 'color: #ef4444; font-weight: bold;', '', e);
       return false;
     }
   }
@@ -90,7 +90,7 @@ export class TelonClient {
 
     // Validate origin
     if (!this.isOriginAllowed(event.origin)) {
-      console.warn(`[TelonClient] Message ignored from unauthorized origin: ${event.origin}`);
+      console.warn(`%c[TelonClient]%c Message ignored from unauthorized origin: ${event.origin}`, 'color: #10b981; font-weight: bold;', '');
       return;
     }
 
@@ -98,13 +98,13 @@ export class TelonClient {
 
     if (type === 'MCP_HOST_AUTH_SYNC') {
       const syncData = data as HostAuthSyncMessage;
-      console.log(`[TelonClient] Received auth token sync from Host: ${event.origin}`);
+      console.log(`%c[TelonClient]%c Received auth token sync from Host: ${event.origin}`, 'color: #10b981; font-weight: bold;', '');
 
       if (this.config.onAuthSync) {
         try {
           await this.config.onAuthSync(syncData.token, syncData.nonce);
         } catch (e) {
-          console.error('[TelonClient] Error in onAuthSync callback:', e);
+          console.error('%c[TelonClient]%c Error in onAuthSync callback:', 'color: #ef4444; font-weight: bold;', '', e);
         }
       }
       return;
@@ -112,7 +112,7 @@ export class TelonClient {
 
     if (type === 'MCP_HOST_HANDSHAKE') {
       const handshake = data as HostHandshakeMessage;
-      console.log(`[TelonClient] Handshake received from: ${event.origin}. Validating...`);
+      console.log(`%c[TelonClient]%c Handshake received from: ${event.origin}. Validating...`, 'color: #10b981; font-weight: bold;', '');
 
       // 1. Check storage access & session
       let hasStorage = true;
@@ -123,7 +123,7 @@ export class TelonClient {
       const isSessionActive = this.config.checkSession ? await this.config.checkSession() : true;
 
       if (!hasStorage || !isSessionActive) {
-        console.warn(`[TelonClient] Handshake paused: hasStorage=${hasStorage}, isSessionActive=${isSessionActive}.`);
+        console.warn(`%c[TelonClient]%c Handshake paused: hasStorage=${hasStorage}, isSessionActive=${isSessionActive}.`, 'color: #10b981; font-weight: bold;', '');
         
         window.parent.postMessage({
           protocol: 'MCPOwnStandard',
@@ -138,19 +138,19 @@ export class TelonClient {
       // 2. Validate API key / Signature
       const expectedKey = this.config.resolveApiKey ? await this.config.resolveApiKey() : '';
       if (!expectedKey) {
-        console.warn('[TelonClient] API key could not be resolved.');
+        console.warn('%c[TelonClient]%c API key could not be resolved.', 'color: #10b981; font-weight: bold;', '');
         return;
       }
 
       if (handshake.apiKey !== expectedKey) {
-        console.warn(`[TelonClient] Connection denied: API keys do not match.`);
+        console.warn(`%c[TelonClient]%c Connection denied: API keys do not match.`, 'color: #10b981; font-weight: bold;', '');
         return;
       }
 
       // 3. Complete Handshake
       this.isAuthorized = true;
       this.authorizedHostOrigin = event.origin;
-      console.log(`[TelonClient] Connection successful with host: ${this.authorizedHostOrigin}`);
+      console.log(`%c[TelonClient]%c Connection successful with host: ${this.authorizedHostOrigin}`, 'color: #10b981; font-weight: bold;', '');
 
       window.parent.postMessage({
         protocol: 'MCPOwnStandard',
@@ -169,7 +169,7 @@ export class TelonClient {
     if (type === 'MCP_HOST_ACTION') {
       const actionMsg = data as HostActionMessage;
       if (!this.isAuthorized || event.origin !== this.authorizedHostOrigin) {
-        console.warn(`[TelonClient] Blocked action: message source is not authorized.`);
+        console.warn(`%c[TelonClient]%c Blocked action: message source is not authorized.`, 'color: #10b981; font-weight: bold;', '');
         return;
       }
 
@@ -179,13 +179,13 @@ export class TelonClient {
         try {
           await handler(actionMsg.payload);
         } catch (e) {
-          console.error(`[TelonClient] Error handling action ${key}:`, e);
+          console.error(`%c[TelonClient]%c Error handling action ${key}:`, 'color: #ef4444; font-weight: bold;', '', e);
         }
       } else if (this.config.onAction) {
         try {
           await this.config.onAction(actionMsg.capability, actionMsg.action, actionMsg.payload);
         } catch (e) {
-          console.error(`[TelonClient] Error handling global action:`, e);
+          console.error(`%c[TelonClient]%c Error handling global action:`, 'color: #ef4444; font-weight: bold;', '', e);
         }
       }
     }

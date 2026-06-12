@@ -33,5 +33,13 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eanavitarte/telon.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eanavitarte/telon/issues"
+  },
+  "homepage": "https://github.com/eanavitarte/telon#readme",
   "license": "MIT"
 }

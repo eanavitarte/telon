@@ -1,6 +1,6 @@
 {
   "name": "telonjs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A fast, effortless, and reliable way to connect agents in the browser.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

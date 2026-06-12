@@ -2,7 +2,8 @@ import {
   TelonClientConfig, 
   WebMcpMessage,
   HostHandshakeMessage,
-  HostActionMessage
+  HostActionMessage,
+  HostAuthSyncMessage
 } from './types';
 
 export class TelonClient {
@@ -47,6 +48,14 @@ export class TelonClient {
     }, this.authorizedHostOrigin);
   }
 
+  public getAuthorized(): boolean {
+    return this.isAuthorized;
+  }
+
+  public getAuthorizedHostOrigin(): string {
+    return this.authorizedHostOrigin;
+  }
+
   public async requestStorageAccess(): Promise<boolean> {
     if (typeof document === 'undefined' || typeof document.requestStorageAccess !== 'function') {
       return false;
@@ -86,6 +95,20 @@ export class TelonClient {
     }
 
     const { type } = data;
+
+    if (type === 'MCP_HOST_AUTH_SYNC') {
+      const syncData = data as HostAuthSyncMessage;
+      console.log(`[TelonClient] Received auth token sync from Host: ${event.origin}`);
+
+      if (this.config.onAuthSync) {
+        try {
+          await this.config.onAuthSync(syncData.token, syncData.nonce);
+        } catch (e) {
+          console.error('[TelonClient] Error in onAuthSync callback:', e);
+        }
+      }
+      return;
+    }
 
     if (type === 'MCP_HOST_HANDSHAKE') {
       const handshake = data as HostHandshakeMessage;
@@ -137,6 +160,10 @@ export class TelonClient {
         capabilities: this.config.capabilities,
         version: '2.0.0'
       }, this.authorizedHostOrigin);
+
+      if (this.config.onAuthorize) {
+        this.config.onAuthorize(event.origin);
+      }
     }
 
     if (type === 'MCP_HOST_ACTION') {

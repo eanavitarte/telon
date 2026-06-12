@@ -5,7 +5,8 @@ import {
   WebMcpMessage,
   ClientRegisterMessage,
   ClientDataUpdateMessage,
-  ClientUnauthorizedMessage
+  ClientUnauthorizedMessage,
+  AuthBridgeSuccessMessage
 } from './types';
 
 export class TelonHost {
@@ -14,6 +15,8 @@ export class TelonHost {
   private registeredClients: Map<string, RegisteredClient> = new Map();
   private activeIframes: Map<string, Window> = new Map();
   private handshakeIntervals: Map<string, any> = new Map();
+  private activeNonces: Map<string, string> = new Map();
+  private activePopups: Map<string, Window> = new Map();
 
   constructor(config: TelonHostConfig) {
     this.config = config;
@@ -80,6 +83,43 @@ export class TelonHost {
     // Start retries
     const interval = setInterval(sendHandshake, 2000);
     this.handshakeIntervals.set(clientId, interval);
+  }
+
+  public openAuthBridge(clientId: string): void {
+    const client = this.clients.get(clientId);
+    if (!client) {
+      console.warn(`[TelonHost] Client definition not found for: ${clientId}`);
+      return;
+    }
+
+    if (typeof window === 'undefined') return;
+
+    // Generate cryptographic-like random nonce
+    const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    this.activeNonces.set(clientId, nonce);
+
+    const hostOrigin = window.location.origin;
+    const baseUrl = client.authUrl || client.url;
+    
+    let targetUrl: string;
+    try {
+      const urlObj = new URL(baseUrl);
+      urlObj.searchParams.set('hostOrigin', hostOrigin);
+      urlObj.searchParams.set('nonce', nonce);
+      urlObj.searchParams.set('clientId', clientId);
+      targetUrl = urlObj.toString();
+    } catch (e) {
+      const separator = baseUrl.includes('?') ? '&' : '?';
+      targetUrl = `${baseUrl}${separator}hostOrigin=${encodeURIComponent(hostOrigin)}&nonce=${encodeURIComponent(nonce)}&clientId=${encodeURIComponent(clientId)}`;
+    }
+
+    console.log(`[TelonHost] Opening auth bridge popup for client ${clientId} at: ${targetUrl}`);
+    const popup = window.open(targetUrl, `TelonAuth_${clientId}`, 'width=600,height=700,status=yes,resizable=yes');
+    if (popup) {
+      this.activePopups.set(clientId, popup);
+    } else {
+      console.error('[TelonHost] Popup blocked. Please allow popups for this site.');
+    }
   }
 
   public sendAction(clientId: string, capability: string, action: string, payload: any): void {
@@ -154,6 +194,48 @@ export class TelonHost {
     }
 
     const { type } = data;
+
+    if (type === 'MCP_AUTH_BRIDGE_SUCCESS') {
+      const authData = data as AuthBridgeSuccessMessage;
+      
+      if (authData.clientId !== matchingClientId) {
+        console.warn(`[TelonHost] Client ID mismatch. Expected: ${matchingClientId}, Got: ${authData.clientId}`);
+        return;
+      }
+
+      const expectedNonce = this.activeNonces.get(matchingClientId);
+      if (!expectedNonce || authData.nonce !== expectedNonce) {
+        console.warn(`[TelonHost] Nonce validation failed or expired for: ${matchingClientId}`);
+        return;
+      }
+
+      this.activeNonces.delete(matchingClientId);
+
+      const iframeWindow = this.activeIframes.get(matchingClientId);
+      if (iframeWindow) {
+        const syncMessage = {
+          protocol: 'MCPOwnStandard',
+          type: 'MCP_HOST_AUTH_SYNC',
+          token: authData.token,
+          nonce: authData.nonce
+        };
+        try {
+          iframeWindow.postMessage(syncMessage, event.origin);
+          console.log(`[TelonHost] Forwarded auth token to iframe: ${matchingClientId}`);
+        } catch (e) {
+          console.error(`[TelonHost] Failed to forward auth token to iframe ${matchingClientId}:`, e);
+        }
+      }
+
+      const popup = this.activePopups.get(matchingClientId);
+      if (popup && !popup.closed) {
+        try {
+          popup.close();
+        } catch {}
+        this.activePopups.delete(matchingClientId);
+      }
+      return;
+    }
 
     if (type === 'MCP_CLIENT_REGISTER') {
       const regData = data as ClientRegisterMessage;

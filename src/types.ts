@@ -37,6 +37,19 @@ export interface ClientDataUpdateMessage extends WebMcpMessage {
   data: any;
 }
 
+export interface AuthBridgeSuccessMessage extends WebMcpMessage {
+  type: 'MCP_AUTH_BRIDGE_SUCCESS';
+  clientId: string;
+  token: any;
+  nonce: string;
+}
+
+export interface HostAuthSyncMessage extends WebMcpMessage {
+  type: 'MCP_HOST_AUTH_SYNC';
+  token: any;
+  nonce: string;
+}
+
 export interface HostActionMessage extends WebMcpMessage {
   type: 'MCP_HOST_ACTION';
   clientName: string;
@@ -53,6 +66,8 @@ export interface TelonClientConfig {
   checkSession?: () => boolean | Promise<boolean>;
   resolveApiKey?: () => string | Promise<string>;
   onAction?: (capability: WebMcpCapability, action: string, payload: any) => void | Promise<void>;
+  onAuthorize?: (hostOrigin: string) => void;
+  onAuthSync?: (token: any, nonce?: string) => void | Promise<void>;
 }
 
 export interface TelonHostConfig {
@@ -66,6 +81,7 @@ export interface ClientDefinition {
   url: string;
   apiKey: string;
   name?: string;
+  authUrl?: string;
 }
 
 export interface RegisteredClient {
